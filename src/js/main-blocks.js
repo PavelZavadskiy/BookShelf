@@ -1,3 +1,5 @@
+import { getCategory, getBookById } from './api-books';
+
 const mainBlocks = document.querySelector('.main-blocks');
 const mainBlocksTitle = document.querySelector('.main-blocks-title');
 const mainBlocksList = document.querySelector('.main-blocks-list');
@@ -30,7 +32,6 @@ const makeBlocks = (object, title) => {
 };
 
 const makeTopBlocks = object => {
-  console.log(object);
   mainTopBlocks.classList.remove('visually-hidden');
   mainBlocks.classList.add('visually-hidden');
   mainTopBlocksTitle.textContent = 'Best Sellers Books';
@@ -49,7 +50,6 @@ const makeTopBlocks = object => {
 };
 
 const renderingBooks = categories => {
-  console.log(categories);
   let booksMarkUp = '';
   let count = categories.books.length > 5 ? 5 : categories.books.length;
   for (let i = 0; i < count; i++) {
@@ -68,6 +68,71 @@ const renderingBooks = categories => {
     `;
   }
   return booksMarkUp;
+};
+
+mainBlocks.addEventListener('click', evt => {
+  if (evt.target.closest('a')) {
+    createModalBookItem(evt.target.closest('a').id);
+  }
+});
+
+mainTopBlocks.addEventListener('click', evt => {
+  if (evt.target.classList.contains('main-top-blocks-list-more')) {
+    const category = evt.target.parentNode.firstElementChild.textContent;
+    getCategory(category).then(result => {
+      makeBlocks(result, category);
+    });
+  }
+
+  if (evt.target.closest('a')) {
+    createModalBookItem(evt.target.closest('a').id);
+  }
+});
+
+const createModalBookItem = id => {
+  getBookById(id).then(result => {
+    const modalBookItem = document.querySelector('.modal-book-item');
+    modalBookItem.classList.remove('visually-hidden');
+
+    const modalBookItemImg = document.querySelector('.modal-book-item-img');
+    modalBookItemImg.src = result.data.book_image;
+    const modalBookItemBodyTitle = document.querySelector('.modal-book-item-body-title');
+    modalBookItemBodyTitle.textContent = result.data.title;
+    const modalBookItemBodyAuthor = document.querySelector('.modal-book-item-body-author');
+    modalBookItemBodyAuthor.textContent = result.data.author;
+    const modalBookItemBodyDescription = document.querySelector('.modal-book-item-body-description');
+    modalBookItemBodyDescription.textContent = result.data.description;
+
+    const removeListeners = () => {
+      document.removeEventListener('click', clickModalBookItemClose);
+      document.removeEventListener('click', clickDocumentModalBookItemBox);
+      document.removeEventListener('keydown', keydownDocumentModalBookItemBox);
+    };
+
+    const modalBookItemClose = document.querySelector('.modal-book-item-close');
+    const clickModalBookItemClose = evt => {
+      modalBookItem.classList.add('visually-hidden');
+      removeListeners();
+    };
+    modalBookItemClose.addEventListener('click', clickModalBookItemClose);
+
+    const modalBookItemBox = document.querySelector('.modal-book-item-box');
+    const clickDocumentModalBookItemBox = evt => {
+      if (!evt.composedPath().includes(modalBookItemBox)) {
+        modalBookItem.classList.add('visually-hidden');
+        removeListeners();
+      }
+    };
+    document.addEventListener('click', clickDocumentModalBookItemBox);
+
+    const keydownDocumentModalBookItemBox = evt => {
+      if (evt.key == 'Escape') {
+        modalBookItem.classList.add('visually-hidden');
+        removeListeners();
+      }
+    };
+    document.addEventListener('keydown', keydownDocumentModalBookItemBox);
+  });
 };
 
 export { makeBlocks, makeTopBlocks };

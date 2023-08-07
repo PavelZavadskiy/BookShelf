@@ -33,3 +33,5 @@ mainCategoriesList.addEventListener('click', event => {
     }
   }
 });
+
+console.log('main-categories');
