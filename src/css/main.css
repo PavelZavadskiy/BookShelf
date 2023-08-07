@@ -1,0 +1,14 @@
+@import 'main-categories.css';
+@import 'main-blocks.css';
+@import 'main-top-blocks';
+
+@media screen and (min-width: 1440px) {
+  .main-box {
+    display: flex;
+    gap: 40px;
+  }
+
+  .main-side-box {
+    width: 356px;
+  }
+}

@@ -1,0 +1,7 @@
+/* // @import './common';
+// @import './example'; */
+@import './fonts';
+@import 'root.css';
+@import 'header.css';
+@import 'auth-reg-modal.css';
+@import 'main.css';
