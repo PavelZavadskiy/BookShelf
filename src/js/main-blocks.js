@@ -1,4 +1,6 @@
 import { getCategory, getBookById } from './api-books';
+import { scrollUp } from './utilites';
+// import './auth-reg-modal';
 
 const mainBlocks = document.querySelector('.main-blocks');
 const mainBlocksTitle = document.querySelector('.main-blocks-title');
@@ -82,6 +84,7 @@ mainTopBlocks.addEventListener('click', evt => {
     getCategory(category).then(result => {
       makeBlocks(result, category);
     });
+    scrollUp();
   }
 
   if (evt.target.closest('a')) {
@@ -102,9 +105,30 @@ const createModalBookItem = id => {
     modalBookItemBodyAuthor.textContent = result.data.author;
     const modalBookItemBodyDescription = document.querySelector('.modal-book-item-body-description');
     modalBookItemBodyDescription.textContent = result.data.description;
+    const modalBookItemBodyLinkAmazon = document.querySelector('.modal-book-item-body-link-amazon');
+    modalBookItemBodyLinkAmazon.classList.add('visually-hidden');
+    const modalBookItemBodyLinkApple = document.querySelector('.modal-book-item-body-link-apple');
+    modalBookItemBodyLinkApple.classList.add('visually-hidden');
+    const modalBookItemBodyLinkBookshop = document.querySelector('.modal-book-item-body-link-bookshop');
+    modalBookItemBodyLinkBookshop.classList.add('visually-hidden');
+
+    console.log(result.data.buy_links);
+    for (let link of result.data.buy_links) {
+      console.log(link);
+      if (link.name === 'Amazon') {
+        modalBookItemBodyLinkAmazon.href = link.url;
+        modalBookItemBodyLinkAmazon.classList.remove('visually-hidden');
+      } else if (link.name === 'Apple Books') {
+        modalBookItemBodyLinkApple.href = link.url;
+        modalBookItemBodyLinkApple.classList.remove('visually-hidden');
+      } else if (link.name === 'Bookshop') {
+        modalBookItemBodyLinkBookshop.href = link.url;
+        modalBookItemBodyLinkBookshop.classList.remove('visually-hidden');
+      }
+    }
 
     const removeListeners = () => {
-      document.removeEventListener('click', clickModalBookItemClose);
+      modalBookItemClose.removeEventListener('click', clickModalBookItemClose);
       document.removeEventListener('click', clickDocumentModalBookItemBox);
       document.removeEventListener('keydown', keydownDocumentModalBookItemBox);
     };

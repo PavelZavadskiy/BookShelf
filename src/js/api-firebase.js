@@ -38,7 +38,8 @@ const signInApp = async (email, password) => {
   return signInWithEmailAndPassword(getAuth(app), email, password);
 };
 
-const isSignIn = () => {
+const isSignIn = async () => {
+  await getAuth(app)._initializationPromise;
   return getAuth(app).currentUser === null ? false : true;
 };
 
@@ -95,9 +96,73 @@ export {
   returnAuth,
 };
 
-//Приклади роботи з ф-ціями
+// const func = async () => {
+//   const signIN = await isSignIn();
+//   if (signIN) {
+//     getUserName()
+//       .then(getUserNameRes => {
+//         console.log(getUserNameRes.data().name);
+//         //Тут рахуємо що все добре і данні є!
+//       })
+//       .catch(getUserNameError => {
+//         console.log('getUserName wrong');
+//         console.log(getUserNameError.code);
+//       });
+//   }
+// };
 
-//===============================================================================
+// func();
+
+// isSignIn()
+//   .then(resp => {
+//     if (resp) {
+//       console.log('ok');
+//       console.log(getUserEmail());
+//       getUserShoppingList().then(respSh => {
+//         console.log(respSh);
+//       });
+//     } else {
+//       console.log('wrong');
+//     }
+//   })
+//   .catch(err => {
+//     console.log('catch _ err');
+//   });
+
+// isSignIn()
+//   .then(resp => {
+//     if (resp) {
+//       console.log('ok');
+//       getUserName()
+//         .then(responce => {
+//           console.log('ok ok');
+//           console.log(responce);
+//         })
+//         .catch(err => {
+//           console.log('ok no');
+//           console.log(err.message);
+//         });
+//     } else {
+//       console.log('wrong');
+//     }
+//   })
+//   .catch(err => {
+//     console.log('catch _ err');
+//   });
+
+// if (isSignIn()) {
+//   getUserName()
+//     .then(getUserNameRes => {
+//       console.log(getUserNameRes.data().name);
+//       //Тут рахуємо що все добре і данні є!
+//     })
+//     .catch(getUserNameError => {
+//       console.log('getUserName wrong');
+//       console.log(getUserNameError.code);
+//     });
+// }
+
+//Приклади роботи з ф-ціями
 
 // --- createAccount ---
 
@@ -134,12 +199,8 @@ export {
 //         console.log('Enter email');
 //       } else if (createAccountError.code === 'auth/missing-password') {
 //         console.log('Enter password');
-//       } else {
-//         console.log('Wrong');
 //       }
 //     });
-
-//===============================================================================
 
 // --- signInApp ---
 
@@ -147,7 +208,6 @@ export {
 //     .then(signInAppRes => {
 //       console.log(`signInApp success `);
 //       console.log(signInAppRes);
-//       //Тут рахуємо що все добре!
 //     })
 //     .catch(signInAppError => {
 //       console.log(`createAccount wrong "${signInAppError.code}"`);
@@ -161,12 +221,14 @@ export {
 //         console.log('Enter password');
 //       } else if (signInAppError.code === 'auth/wrong-password') {
 //         console.log('Wrong password');
-//       } else {
-//         console.log('Wrong');
 //       }
 //     });
 
-//===============================================================================
+// --- signOutApp ---
+
+//   if (isSignIn()) {
+//     console.log(signOutApp());
+//   }
 
 // --- removeAccountInfo ---
 
@@ -192,8 +254,6 @@ export {
 //       });
 //   }
 
-//===============================================================================
-
 // --- getUserShoppingList ---
 
 //   if (isSignIn()) {
@@ -211,8 +271,6 @@ export {
 //       });
 //   }
 
-//===============================================================================
-
 // --- updateUserShoppingList ---
 
 //   const shoppingList = (await getTopBooks()).data[0].books.slice(1, 5);
@@ -228,8 +286,6 @@ export {
 //       });
 //   }
 
-//===============================================================================
-
 // --- updateShopList ---
 
 //   if (isSignIn()) {
@@ -242,8 +298,6 @@ export {
 //         console.log(updateShopListError.code);
 //       });
 //   }
-
-//===============================================================================
 
 // --- getUserName ---
 
@@ -258,8 +312,6 @@ export {
 //         console.log(getUserNameError.code);
 //       });
 //   }
-
-//===============================================================================
 
 // --- getUserEmail ---
 
