@@ -1,4 +1,5 @@
 header {
+  max-width: 375px;
   border-radius: 0px 0px 8px 8px;
   border: 1.5px solid var(--header-border-color);
   background: var(--header-bg);
@@ -6,6 +7,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0 auto;
 }
 
 .header-nav {
@@ -77,6 +79,7 @@ header {
     padding: 14px 32px;
   } */
   header {
+    max-width: 768px;
     padding: 14px 32px;
   }
 
@@ -163,6 +166,7 @@ header {
 
 @media screen and (min-width: 1440px) {
   header {
+    max-width: 1440px;
     padding: 14px 24px;
   }
   /* .container {

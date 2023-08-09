@@ -1,5 +1,5 @@
 .main-top-blocks {
-  padding: 20px 20px 80px;
+  padding: 0 0 80px;
 }
 
 .main-top-blocks-title {
@@ -88,7 +88,7 @@
 
 @media screen and (min-width: 768px) {
   .main-top-blocks {
-    padding: 50px 32px 100px;
+    padding: 60px 0 100px;
   }
 
   .main-top-blocks-list-books {
@@ -107,7 +107,7 @@
 
 @media screen and (min-width: 1440px) {
   .main-top-blocks {
-    padding: 40px 24px 100px 0;
+    padding: 40px 0 100px 0;
   }
 
   .main-top-blocks-list-books {

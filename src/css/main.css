@@ -2,8 +2,39 @@
 @import 'main-blocks.css';
 @import 'main-top-blocks';
 @import 'modal-book-item';
+@import 'main-support.css';
+
+.section-main {
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .section-main {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+  }
+
+  .main-side-box {
+    width: 356px;
+  }
+
+  /* .main-support-box {
+    width: calc((100%-32px) / 2);
+  } */
+}
 
 @media screen and (min-width: 1440px) {
+  .section-main {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 86px;
+  }
+
   .main-box {
     display: flex;
     gap: 40px;

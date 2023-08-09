@@ -20,7 +20,7 @@ const makeBlocks = (object, title) => {
       return `<li class="main-block-list-item">
                 <a class="main-block-list-item-link link" id="${item._id}">
                   <div class="main-block-list-item-img-box">
-                    <img class="main-block-list-item-img" src="${item.book_image}" alt="${
+                    <img class="main-block-list-item-img" loading="lazy" src="${item.book_image}" alt="${
         item.author + ' ' + item.title
       }">
                   </div>
@@ -59,7 +59,7 @@ const renderingBooks = categories => {
       <li class="main-top-blocks-list-books-item">
         <a class="main-top-blocks-list-item-link link" id="${categories.books[i]._id}">
           <div class="main-top-blocks-list-item-img-box">
-            <img class="main-top-blocks-list-item-img" src="${categories.books[i].book_image}" alt="${
+            <img class="main-top-blocks-list-item-img" loading="lazy" src="${categories.books[i].book_image}" alt="${
       categories.books[i].author + ' ' + categories.books[i].title
     }">
           </div>
@@ -81,6 +81,13 @@ mainBlocks.addEventListener('click', evt => {
 mainTopBlocks.addEventListener('click', evt => {
   if (evt.target.classList.contains('main-top-blocks-list-more')) {
     const category = evt.target.parentNode.firstElementChild.textContent;
+
+    const mainCategoriesList = document.querySelector('.main-categories-list');
+    for (const item of mainCategoriesList.children) {
+      item.classList.remove('main-categories-list-item-active');
+      if (item.textContent === category) item.classList.add('main-categories-list-item-active');
+    }
+
     getCategory(category).then(result => {
       makeBlocks(result, category);
     });
