@@ -3,6 +3,7 @@
 @import 'main-top-blocks';
 @import 'modal-book-item';
 @import 'main-support.css';
+@import 'main-shoppinglist.css';
 
 .section-main {
   padding: 40px 0;

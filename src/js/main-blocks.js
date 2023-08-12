@@ -1,5 +1,7 @@
 import { getCategory, getBookById } from './api-books';
 import { scrollUp } from './utilites';
+import { isSignIn, getUserShoppingList, updateUserShoppingList } from './api-firebase';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 // import './auth-reg-modal';
 
 const mainBlocks = document.querySelector('.main-blocks');
@@ -10,9 +12,12 @@ const mainTopBlocks = document.querySelector('.main-top-blocks');
 const mainTopBlocksTitle = document.querySelector('.main-top-blocks-title');
 const mainTopBlocksList = document.querySelector('.main-top-blocks-list');
 
+const mainShoppinglistBloks = document.querySelector('.main-shoppinglist-bloks');
+
 const makeBlocks = (object, title) => {
-  mainBlocks.classList.remove('visually-hidden');
+  mainShoppinglistBloks.classList.add('visually-hidden');
   mainTopBlocks.classList.add('visually-hidden');
+  mainBlocks.classList.remove('visually-hidden');
   mainBlocksTitle.textContent = title;
 
   const markup = object.data
@@ -36,6 +41,8 @@ const makeBlocks = (object, title) => {
 const makeTopBlocks = object => {
   mainTopBlocks.classList.remove('visually-hidden');
   mainBlocks.classList.add('visually-hidden');
+  mainShoppinglistBloks.classList.add('visually-hidden');
+
   mainTopBlocksTitle.textContent = 'Best Sellers Books';
   const markup = object.data
     .map(item => {
@@ -118,10 +125,7 @@ const createModalBookItem = id => {
     modalBookItemBodyLinkApple.classList.add('visually-hidden');
     const modalBookItemBodyLinkBookshop = document.querySelector('.modal-book-item-body-link-bookshop');
     modalBookItemBodyLinkBookshop.classList.add('visually-hidden');
-
-    console.log(result.data.buy_links);
     for (let link of result.data.buy_links) {
-      console.log(link);
       if (link.name === 'Amazon') {
         modalBookItemBodyLinkAmazon.href = link.url;
         modalBookItemBodyLinkAmazon.classList.remove('visually-hidden');
@@ -134,11 +138,77 @@ const createModalBookItem = id => {
       }
     }
 
+    const modalBookItemShoppinhlistAdd = document.querySelector('.modal-book-item-shoppinhlist-add');
+    const modalBookItemShoppinhlistRemove = document.querySelector('.modal-book-item-shoppinhlist-remove');
+    const modalBookItemShoppinhlistRemoveParagraph = document.querySelector(
+      '.modal-book-item-shoppinhlist-remove-paragraph'
+    );
+    const modalBookItemShoppinhlistBtnBox = document.querySelector('.modal-book-item-shoppinhlist-btn-box');
+    modalBookItemShoppinhlistAdd.classList.add('visually-hidden');
+    modalBookItemShoppinhlistRemove.classList.add('visually-hidden');
+    modalBookItemShoppinhlistRemoveParagraph.classList.add('visually-hidden');
+
+    let shopingList = null;
+
+    if (!isSignIn()) {
+      modalBookItemShoppinhlistBtnBox.classList.add('visually-hidden');
+    } else {
+      console.log('isSignIn()');
+      getUserShoppingList()
+        .then(respShoppingList => {
+          shopingList = respShoppingList.data().shoppingList.slice();
+
+          if (shopingList.find(item => item._id === result.data._id) == undefined) {
+            modalBookItemShoppinhlistAdd.classList.remove('visually-hidden');
+            modalBookItemShoppinhlistRemove.classList.add('visually-hidden');
+            modalBookItemShoppinhlistRemoveParagraph.classList.add('visually-hidden');
+          } else {
+            modalBookItemShoppinhlistAdd.classList.add('visually-hidden');
+            modalBookItemShoppinhlistRemove.classList.remove('visually-hidden');
+            modalBookItemShoppinhlistRemoveParagraph.classList.remove('visually-hidden');
+          }
+        })
+        .catch(errShoppingList => {
+          console.log(`1`);
+          Notify.failure(errShoppingList);
+          modalBookItemShoppinhlistBtnBox.classList.add('visually-hidden');
+        });
+    }
+
     const removeListeners = () => {
       modalBookItemClose.removeEventListener('click', clickModalBookItemClose);
       document.removeEventListener('click', clickDocumentModalBookItemBox);
       document.removeEventListener('keydown', keydownDocumentModalBookItemBox);
     };
+
+    modalBookItemShoppinhlistAdd.addEventListener('click', () => {
+      shopingList.push(result.data);
+      updateUserShoppingList(shopingList)
+        .then(shoppingListRes => {
+          modalBookItemShoppinhlistAdd.classList.add('visually-hidden');
+          modalBookItemShoppinhlistRemove.classList.remove('visually-hidden');
+          modalBookItemShoppinhlistRemoveParagraph.classList.remove('visually-hidden');
+        })
+        .catch(updateUserShoppingListError => {
+          Notify.failure(updateUserShoppingListError);
+        });
+    });
+
+    modalBookItemShoppinhlistRemove.addEventListener('click', () => {
+      shopingList.splice(
+        shopingList.findIndex(item => item._id === result.data._id),
+        1
+      );
+      updateUserShoppingList(shopingList)
+        .then(shoppingListRes => {
+          modalBookItemShoppinhlistAdd.classList.remove('visually-hidden');
+          modalBookItemShoppinhlistRemove.classList.add('visually-hidden');
+          modalBookItemShoppinhlistRemoveParagraph.classList.add('visually-hidden');
+        })
+        .catch(updateUserShoppingListError => {
+          Notify.failure(updateUserShoppingListError);
+        });
+    });
 
     const modalBookItemClose = document.querySelector('.modal-book-item-close');
     const clickModalBookItemClose = evt => {

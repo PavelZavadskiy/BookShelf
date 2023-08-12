@@ -103,7 +103,7 @@ header {
     text-transform: uppercase;
   }
 
-  .header-menu-shippinglist {
+  .header-menu-btn {
     display: flex;
     padding: 7px 16px;
     justify-content: center;
@@ -118,9 +118,10 @@ header {
     font-weight: 700;
     line-height: 128.571%;
     text-transform: uppercase;
+    cursor: pointer;
   }
 
-  .header-menu-shippinglist-icon {
+  .header-menu-shoppinglist-icon {
     width: 20px;
     height: 20px;
     fill: var(--header-menu-text-color);
